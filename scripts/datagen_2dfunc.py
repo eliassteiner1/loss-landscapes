@@ -24,7 +24,11 @@ def composite_func(x, y):
 
 
 if __name__ == "__main__" :
+    print("\033[2J\033[3J\033[H", end="", flush=True) # start with an empty terminal
+    print(f"\033[1m\033[38;2;51;153;102mrunning script {__file__}... \033[0m")
     
+    # data generation
+    print("⯈ generating data ...")
     N = 100_000
     eps = 5e-2
     xy = np.random.uniform(-1, 1, size=(N, 2))
@@ -48,8 +52,9 @@ if __name__ == "__main__" :
     # fig.show()
 
     # save the data as a dataset
-    with h5py.File(PROJ_ROOT / "data/dataset_2dfunc.h5", "w") as f:
-        f.create_dataset("input", data=xy.astype(np.float32))
-        f.create_dataset("label", data=z.astype(np.float32))
+    print("⯈ saving data ...")
+    with h5py.File(PROJ_ROOT / "data/ds_2dfunc.h5", "w") as f:
+        f.create_dataset("data", data=xy.astype(np.float32))
+        f.create_dataset("targets", data=z.astype(np.float32))
         
-    print("done with data generation - file saved!")
+    print("⯈ done with data generation - file saved!")
