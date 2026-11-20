@@ -1,6 +1,6 @@
 # Loss Landscapes
 
-![loss landscapes of a deep ResNet without (left) and with (right) skip connections](results/cover.png)
+![loss landscapes of a deep ResNet without (left) and with (right) skip connections](results/cover_transparent.png)
 
 ## Abstract
 
