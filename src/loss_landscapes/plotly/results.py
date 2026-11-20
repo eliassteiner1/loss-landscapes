@@ -22,12 +22,12 @@ LIGHTING = dict(
 LIGHTPOSITION = dict(x=1000, y=1000, z=5000)   # light direction, in data-ish coordinates
 
 
-def soft_clip(z, c, k=SOFT_K):
+def soft_clip(z: np.ndarray, c: float, k: float = SOFT_K) -> np.ndarray:
     """ smooth min(z, c) via log-sum-exp; k = width of the rounded transition """
     return -k * np.logaddexp(-z / k, -c / k)
 
 
-def surface(r: dict) -> go.Surface:
+def surface(r: dict[str, np.ndarray]) -> go.Surface:
     """ one landscape surface with the shared color axis + lighting """
     return go.Surface(
         x=r["alphas"], y=r["betas"], z=r["z"].T,
@@ -52,7 +52,7 @@ for path in sorted((PROJ_ROOT / "results").glob("resnet_*.npz")):
 zrange = [min(r["z"].min() for r in results.values()), np.log(CUTOFF)]
 
 
-def plot_landscapes(method: str):
+def plot_landscapes(method: str) -> go.Figure:
     """ grid of surfaces for one direction method: one row per depth, columns = no skip | skip """
     
     # get all results for one method (all depths, skip and noskip)

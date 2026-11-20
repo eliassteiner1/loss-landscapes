@@ -8,10 +8,10 @@ class SimpleNet(nn.Module):
         self.fc1 = nn.Linear(dim_in, dim_hidden)
         self.fc2 = nn.Linear(dim_hidden, dim_hidden)
         self.fc3 = nn.Linear(dim_hidden, dim_out)
-        self.act = nn.ReLU()
+        self.activ = nn.ReLU()
         
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = self.act(self.fc1(x))
-        x = self.act(self.fc2(x))
+        x = self.activ(self.fc1(x))
+        x = self.activ(self.fc2(x))
         x = self.fc3(x)
         return x

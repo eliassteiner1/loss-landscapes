@@ -24,7 +24,7 @@ class Block(nn.Module):
             return self.activ(out)
 
 @dataclass
-class SmallResNetConf:
+class SmallResNetConfig:
     n_in_channels: int = 1
     n_hidden_channels: int = 16
     n_blocks_per_stage: int = 9
@@ -33,21 +33,21 @@ class SmallResNetConf:
     n_classes: int = 10
     
 class SmallResNet(nn.Module):
-    def __init__(self, Cfg: SmallResNetConf):
+    def __init__(self, mcfg: SmallResNetConfig):
         super().__init__()
-        self._cfg_backup = Cfg
+        self.mcfg = mcfg
         
         # this is the main chain of blocks > multiple stages, each a bunch of blocks with the same params
         layers = []
-        for s in range(Cfg.n_stages):
+        for s in range(mcfg.n_stages):
             
             # doubles the number of hodden channels for each progressive stage (as the resolution is halved)
-            c = Cfg.n_hidden_channels * 2**s
+            c = mcfg.n_hidden_channels * 2**s
             
             # Transition-Layer: this goes from input img channels to n_hidden_channels that are used in blocks
             if s == 0:
                 layers += [
-                    nn.Conv2d(Cfg.n_in_channels, c, kernel_size=3, padding=1, bias=False),
+                    nn.Conv2d(mcfg.n_in_channels, c, kernel_size=3, padding=1, bias=False),
                     nn.BatchNorm2d(num_features = c),
                     nn.ReLU(), 
                 ]
@@ -61,7 +61,7 @@ class SmallResNet(nn.Module):
                 ]
                 
             # stage blocks, all the same (create a new block! not just copying reference with []*b_p_s!)
-            layers += [Block(c, Cfg.use_skip) for _ in range(Cfg.n_blocks_per_stage)]  
+            layers += [Block(c, mcfg.use_skip) for _ in range(mcfg.n_blocks_per_stage)]  
         
         self.body = nn.Sequential(*layers)
         
@@ -69,10 +69,10 @@ class SmallResNet(nn.Module):
         self.head = nn.Sequential(
             nn.AdaptiveAvgPool2d(output_size=1),
             nn.Flatten(),
-            nn.Linear(Cfg.n_hidden_channels * 2**(Cfg.n_stages-1), Cfg.n_classes)
+            nn.Linear(mcfg.n_hidden_channels * 2**(mcfg.n_stages-1), mcfg.n_classes)
         )
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.head(self.body(x))
         
  

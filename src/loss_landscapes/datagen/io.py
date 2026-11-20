@@ -17,7 +17,7 @@ def load_data(dataset_name: str) -> tuple[np.ndarray, np.ndarray]:
     print("> successfully loaded data!")
     return data, targets
 
-def write_data(dataset_name: str, data: np.ndarray, targets: np.ndarray):
+def write_data(dataset_name: str, data: np.ndarray, targets: np.ndarray) -> None:
     print(f"> writing dataset {dataset_name}")
     with h5py.File(PROJ_ROOT / "data" / dataset_name, "w") as f:
         f["data"] = data

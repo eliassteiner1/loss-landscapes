@@ -15,7 +15,7 @@ class Tokens:
     grid: str = "#ececec"
     axis: str = "#bdbdbd"
     # data colors
-    colorway: tuple = (
+    colorway: tuple[str, ...] = (
         "#1a46b0", 
         "#d3800f", 
         "#018267", 
