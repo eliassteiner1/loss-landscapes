@@ -59,7 +59,11 @@ def training_loop(
     best_loss = float("inf")
     best_snapshot = None
     
-    print(f"> training model with {network._cfg_backup.use_skip=}")
+    if hasattr(network, "_cfg_backup"):
+        print(f"> training model with {network._cfg_backup.use_skip }")
+    else: 
+        print(f"> training model ....")
+        
     for E in tqdm(range(CfgTrain.n_epochs), desc="  progress: ", position=0, disable=None): # disable in notebook
 
         # ===== training =====
