@@ -14,10 +14,10 @@ from loss_landscapes.train.setup import get_device
 
 # as a main or put this into the executed block??
 # this is what will run piece by piece in the simple demo notebook
-def main(CfgTrain: TrainingConfig, CfgModel: SmallResNetConf, dataset_path: str = "data/ds_fashion.h5"):
+def main(CfgTrain: TrainingConfig, CfgModel: SmallResNetConf, dataset_name: str = "ds_fashion.h5"):
      
     device = get_device()
-    X, y = load_data(PROJ_ROOT / dataset_path)
+    X, y = load_data(dataset_name)
     
     DsSplit = DataSplit(
         n_total=len(X),
@@ -49,8 +49,11 @@ def main(CfgTrain: TrainingConfig, CfgModel: SmallResNetConf, dataset_path: str 
 
     # store the model
     save_model(
-        best_snapshot, CfgModel, 
         f"resnet_b{CfgModel.n_blocks_per_stage:02d}_{"skip" if CfgModel.use_skip else "noskip"}.pt",
+        best_snapshot, 
+        CfgModel, 
+        data_mean=mean,
+        data_sdev=sdev,
     )
 
    
